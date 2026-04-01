@@ -1,0 +1,16 @@
+# /etc/systemd/system/overlay-writer.service
+[Unit]
+Description=Overlay writer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/overlay
+ExecStart=/usr/bin/python3 /root/overlay/overlay_writer.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
