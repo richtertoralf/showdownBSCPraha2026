@@ -8,6 +8,30 @@ Technische Dokumentation des Streaming- und Overlay-Setups für das Showdown-Eve
 
 ![Streampipeline](stream_overview.jpeg)
 
+### Overlay comparison (OBS vs FFmpeg)
+
+Left: OBS + Browser (Tournify, gecroppt)  
+Right: FFmpeg + lokale Textdateien (overlay_writer.py)
+
+Ziel damals:
+- Vergleich zweier Ansätze für Match-Overlays
+- Bewertung von Qualität, Bedienaufwand und Skalierbarkeit
+
+Erkenntnis:
+- OBS + Browser liefert optisch die schöneren und „live“ aktualisierten Ergebnisse
+- Problem: für jeden Tisch wäre eine manuelle Bedienung nötig  
+  (Scrollen und Ausrichten auf der Tournify-Seite bei jedem Match)
+- bei 6 Tischen praktisch nicht umsetzbar ohne mehrere Operator
+
+Deshalb:
+- FFmpeg + Textfiles als vollautomatische Lösung pro Tisch
+- stabil, reproduzierbar und ohne manuelle Eingriffe
+
+Einsatzentscheidung:
+- OBS nur für zentrale Spiele (z. B. Finals auf Tisch 1)
+- FFmpeg-Overlay für alle parallel laufenden Tische
+
+
 ## Ziel des Repos
 
 Dieses Repository dokumentiert das technische Setup für das Showdown-Event **BSC Praha 2026**.
