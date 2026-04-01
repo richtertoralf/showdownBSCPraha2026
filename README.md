@@ -4,9 +4,6 @@ Technische Dokumentation des Streaming- und Overlay-Setups für das Showdown-Eve
 
 <img src="Screenshot 2026-03-28_Tabelview.png" alt="Showdown Tabel 1 und 2" width="70%">
 
----
-
-![Streampipeline](stream_overview.jpeg)
 
 ### Overlay comparison (OBS vs FFmpeg)
 
@@ -31,6 +28,10 @@ Einsatzentscheidung:
 - OBS nur für zentrale Spiele (z. B. Finals auf Tisch 1)
 - FFmpeg-Overlay für alle parallel laufenden Tische
 
+
+---
+
+![Streampipeline](stream_overview.jpeg)
 
 ## Ziel des Repos
 
