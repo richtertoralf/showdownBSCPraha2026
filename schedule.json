@@ -1,0 +1,38 @@
+[
+    {
+        "date": "2026-03-28",
+        "time": "14:00",
+        "table": 2,
+        "group": "Play-Out Place 5th/6th",
+        "p1": "Dominika Czuj",
+        "p1_nat": "POL",
+        "p2": "Sonia Tranchina",
+        "p2_nat": "ITA",
+        "ref1": "Konrad Schlatter",
+        "ref2": "Gregoria Tekidou"
+    },
+    {
+        "date": "2026-03-28",
+        "time": "14:00",
+        "table": 3,
+        "group": "Play-Out Place 7th/8th",
+        "p1": "Iva Karaskova",
+        "p1_nat": "CZE",
+        "p2": "Sara Fappani",
+        "p2_nat": "ITA",
+        "ref1": "Kalevi Aittola",
+        "ref2": "Jan Šenitko"
+    },
+    {
+        "date": "2026-03-28",
+        "time": "14:45",
+        "table": 2,
+        "group": "Play-Out Place 5th/6th",
+        "p1": "Franck Bouilloux",
+        "p1_nat": "FRA",
+        "p2": "Jelle Stuer",
+        "p2_nat": "BEL",
+        "ref1": null,
+        "ref2": null
+    }
+]
