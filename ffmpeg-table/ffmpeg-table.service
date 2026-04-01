@@ -1,0 +1,16 @@
+# /etc/systemd/system/ffmpeg-table.service
+[Unit]
+Description=FFmpeg table worker
+After=network-online.target overlay-writer.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=/usr/local/bin/run-ffmpeg-table.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
