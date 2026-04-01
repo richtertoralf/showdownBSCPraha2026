@@ -1,0 +1,111 @@
+#cloud-config
+
+hostname: ffmpeg-table1
+fqdn: ffmpeg-table1.local
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - ffmpeg
+  - python3
+  - git
+  - curl
+  - ca-certificates
+
+write_files:
+  - path: /root/bootstrap-showdown.sh
+    permissions: "0755"
+    owner: root:root
+    content: |
+      #!/bin/bash
+      set -euxo pipefail
+
+      REPO_DIR="/opt/showdownBSCPraha2026"
+      REPO_URL="https://github.com/richtertoralf/showdownBSCPraha2026.git"
+
+      # -----------------------------
+      # Konfiguration für DIESEN Host
+      # -----------------------------
+      TABLE="1"
+      RTSP_HOST="192.168.97.3"
+      RTSP_PORT="8554"
+      YOUTUBE_KEY="HIER_DEIN_YOUTUBE_STREAMKEY"
+
+      # Optional:
+      # Falls mehrere Server unterschiedliche Namen bekommen sollen,
+      # kann TABLE hier pro VM angepasst werden.
+      #
+      # Beispiel:
+      # ffmpeg-table1 -> TABLE=1
+      # ffmpeg-table2 -> TABLE=2
+      # ...
+
+      # -----------------------------
+      # Repository holen / aktualisieren
+      # -----------------------------
+      if [ ! -d "$REPO_DIR/.git" ]; then
+        git clone "$REPO_URL" "$REPO_DIR"
+      else
+        git -C "$REPO_DIR" fetch --all
+        git -C "$REPO_DIR" reset --hard origin/main
+      fi
+
+      # -----------------------------
+      # Verzeichnisse anlegen
+      # -----------------------------
+      mkdir -p /root/overlay
+      mkdir -p /var/overlays
+      mkdir -p /usr/local/bin
+
+      # -----------------------------
+      # Skripte installieren
+      # -----------------------------
+      install -m 0755 "$REPO_DIR/ffmpeg-table/run-ffmpeg-table.sh" /usr/local/bin/run-ffmpeg-table.sh
+      install -m 0755 "$REPO_DIR/overlay/overlay_writer.py" /usr/local/bin/overlay_writer.py
+
+      # -----------------------------
+      # Beispiel-Spielplan installieren
+      # -----------------------------
+      # Falls später per scp/rsync ein echter Spielplan verteilt wird,
+      # kann diese Datei einfach überschrieben werden.
+      install -m 0644 "$REPO_DIR/overlay/schedule.json" /root/overlay/schedule.json
+
+      # -----------------------------
+      # FFmpeg-Umgebung schreiben
+      # -----------------------------
+      cat >/etc/ffmpeg-table.env <<EOF
+      RTSP_HOST=${RTSP_HOST}
+      RTSP_PORT=${RTSP_PORT}
+      TABLE=${TABLE}
+      YOUTUBE_KEY=${YOUTUBE_KEY}
+      EOF
+      chmod 600 /etc/ffmpeg-table.env
+
+      # -----------------------------
+      # systemd-Units installieren
+      # -----------------------------
+      install -m 0644 "$REPO_DIR/ffmpeg-table/ffmpeg-table.service" /etc/systemd/system/ffmpeg-table.service
+      install -m 0644 "$REPO_DIR/overlay/overlay-writer.service" /etc/systemd/system/overlay-writer.service
+
+      # -----------------------------
+      # systemd neu laden und Dienste aktivieren
+      # -----------------------------
+      systemctl daemon-reload
+      systemctl enable overlay-writer.service
+      systemctl enable ffmpeg-table.service
+
+      # Overlay zuerst, dann FFmpeg
+      systemctl restart overlay-writer.service
+      systemctl restart ffmpeg-table.service
+
+      # -----------------------------
+      # Kurze Statusausgabe ins Log
+      # -----------------------------
+      systemctl --no-pager --full status overlay-writer.service || true
+      systemctl --no-pager --full status ffmpeg-table.service || true
+
+runcmd:
+  - /root/bootstrap-showdown.sh
+
+final_message: "showdownBSCPraha2026 bootstrap finished"
