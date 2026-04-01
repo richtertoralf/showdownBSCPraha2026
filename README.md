@@ -173,10 +173,15 @@ Diese Lösung wurde für ein mehrtägiges Showdown-Event mit mehreren parallelen
 
 ---
 
-## Status
+## Hetzner cloud-init
 
-Praxisnahes Event-Repository mit Fokus auf:
+Für neue FFmpeg-Server kann eine cloud-init-Datei verwendet werden, die:
 
-- Verständlichkeit
-- schneller Anpassbarkeit
-- robuster Betrieb unter realen Bedingungen
+- das Repository nach `/opt/showdownBSCPraha2026` klont,
+- `run-ffmpeg-table.sh` nach `/usr/local/bin/` installiert,
+- `overlay_writer.py` nach `/usr/local/bin/` installiert,
+- `/etc/ffmpeg-table.env` host-spezifisch schreibt,
+- `schedule.json` nach `/root/overlay/` kopiert,
+- die systemd-Services `ffmpeg-table.service` und `overlay-writer.service` aktiviert.
+
+Pro Host müssen mindestens `TABLE` und `YOUTUBE_KEY` angepasst werden.
