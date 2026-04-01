@@ -1,5 +1,7 @@
 # showdownBSCPraha2026
 
+Technische Dokumentation des Streaming- und Overlay-Setups für das Showdown-Event BSC Praha 2026 mit FFmpeg, Python, systemd und zeitgesteuerten Match-Overlays.
+
 <img src="Screenshot 2026-03-28_Tabelview.png" alt="Showdown Tabel 1 und 2" width="70%">
 
 ---
