@@ -2,10 +2,9 @@
 
 Technische Dokumentation des Streaming- und Overlay-Setups für das Showdown-Event BSC Praha 2026 mit FFmpeg, Python, systemd und zeitgesteuerten Match-Overlays.
 
-<img src="Screenshot 2026-03-28_Tabelview.png" alt="Showdown Tabel 1 und 2" width="70%">
-
-
 ### Overlay comparison (OBS vs FFmpeg)
+
+<img src="Screenshot 2026-03-28_Tabelview.png" alt="Showdown Tabel 1 und 2" width="70%">
 
 Left: OBS + Browser (Tournify, gecroppt)  
 Right: FFmpeg + lokale Textdateien (overlay_writer.py)
@@ -31,9 +30,9 @@ Einsatzentscheidung:
 
 ---
 
-![Streampipeline](stream_overview.jpeg)
-
 ### Stream architecture overview
+
+![Streampipeline](stream_overview.jpeg)
 
 Das Diagramm zeigt die Streaming-Architektur für das Event:
 
