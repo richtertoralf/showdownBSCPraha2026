@@ -33,6 +33,28 @@ Einsatzentscheidung:
 
 ![Streampipeline](stream_overview.jpeg)
 
+### Stream architecture overview
+
+Das Diagramm zeigt die Streaming-Architektur für das Event:
+
+- Links: mehrere Encoder (Kameras) senden per SRT (H.265) zum zentralen MediaMTX-Server (CPX42)
+- Mitte: MediaMTX dient als Ingest- und Verteilknoten
+- Rechts: mehrere dedizierte FFmpeg-Server (CX33), die jeweils:
+  - einen Stream per RTSP von MediaMTX ziehen
+  - Overlay hinzufügen (Textfiles)
+  - nach H.264 encodieren
+  - per RTMP zu YouTube pushen
+
+Ziel der Architektur:
+- klare Trennung von Ingest (MediaMTX) und Verarbeitung (FFmpeg)
+- horizontale Skalierung: ein Server pro Tisch/Stream
+- stabile und unabhängige YouTube-Streams pro Tisch
+
+Erkenntnis:
+- Entkopplung reduziert Last auf dem zentralen Server
+- Probleme (CPU, Netzwerk, Encoding) bleiben auf einzelne Streams begrenzt
+- Setup ist einfach erweiterbar (weitere Tische = weitere FFmpeg-Server)
+
 ## Ziel des Repos
 
 Dieses Repository dokumentiert das technische Setup für das Showdown-Event **BSC Praha 2026**.
