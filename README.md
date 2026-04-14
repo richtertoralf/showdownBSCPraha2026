@@ -1,5 +1,10 @@
 # showdownBSCPraha2026
 
+![Use Case](https://img.shields.io/badge/Use%20Case-Multi--Table%20Streaming-purple)
+![Stack](https://img.shields.io/badge/Stack-FFmpeg%20%2B%20Python%20%2B%20systemd-green)
+![Ingest](https://img.shields.io/badge/Ingest-MediaMTX-orange)
+![Status](https://img.shields.io/badge/Status-Event%20Proven-blue)
+
 Technische Dokumentation des Streaming- und Overlay-Setups für das Showdown-Event BSC Praha 2026 mit FFmpeg, Python, systemd und zeitgesteuerten Match-Overlays.
 
 ### Overlay comparison (OBS vs FFmpeg)
