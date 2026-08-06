@@ -121,6 +121,13 @@ Enthält die Overlay-Logik:
 - `overlay-writer.service`  
   systemd-Service für den Overlay-Writer.
 
+
+### `mediamtx-direct-youtube/`
+
+Dokumentiert eine alternative einfache Variante, bei der MediaMTX
+eingehende Tischstreams automatisch und ohne Transkodierung direkt
+zu den jeweils zugeordneten YouTube-Streams weiterleitete.
+
 ---
 
 ## Overlay-Logik
