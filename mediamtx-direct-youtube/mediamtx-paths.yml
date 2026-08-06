@@ -1,0 +1,7 @@
+# Ausschnitt aus der damals verwendeten /usr/local/etc/mediamtx.yml
+
+paths:
+  "~^table([1-6])$":
+    source: publisher
+    runOnReady: /usr/local/bin/yt-push.sh
+    runOnReadyRestart: yes
