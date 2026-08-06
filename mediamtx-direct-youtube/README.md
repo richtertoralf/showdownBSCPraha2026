@@ -72,7 +72,45 @@ Die produktive Datei lag unter:
 /usr/local/etc/youtube_keys.map
 ```
 
-Echte YouTube-Keys dürfen nicht in das Repository übernommen werden.
+Beispiel mit Platzhaltern:
+
+```ini
+table1=YOUTUBE_STREAM_KEY_TABLE1
+table2=YOUTUBE_STREAM_KEY_TABLE2
+```
+
+Echte YouTube-Keys dürfen nicht in das Repository übernommen werden. Die
+produktive Datei ist nur für root lesbar und wird mit `chmod 600` geschützt.
+
+## Streamkeys einsetzen
+
+Datei öffnen:
+
+```bash
+sudo nano /usr/local/etc/youtube_keys.map
+```
+
+Die Platzhalter durch die echten Keys ersetzen:
+
+```ini
+table1=ECHTER_KEY_FUER_TISCH_1
+table2=ECHTER_KEY_FUER_TISCH_2
+```
+
+Danach:
+
+```bash
+sudo chown root:root /usr/local/etc/youtube_keys.map
+sudo chmod 600 /usr/local/etc/youtube_keys.map
+```
+
+Die gemeinsame YouTube-RTMP-Basis-URL
+`rtmp://a.rtmp.youtube.com/live2` steht als `YOUTUBE_URL` in `yt-push.sh`.
+Die Vorlage im Repository ist `mediamtx-direct-youtube/yt-push.sh`; auf dem
+Server ist das Skript unter `/usr/local/bin/yt-push.sh` installiert.
+`/usr/local/etc/youtube_keys.map` enthält weiterhin nur die Zuordnung der
+Tischpfade zu ihren Streamkeys. Das Skript setzt die vollständige Zieladresse
+als `"${YOUTUBE_URL}/${KEY}"` zusammen. Nur der Key ist geheim.
 
 ### `mediamtx-paths.yml`
 

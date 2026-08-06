@@ -231,15 +231,46 @@ Diese Lösung wurde für ein mehrtägiges Showdown-Event mit mehreren parallelen
 
 ---
 
+## Wieder in Betrieb nehmen
+
+Für die erneute Inbetriebnahme gilt dieser zweistufige Ablauf:
+
+```text
+MediaMTX-VM bei Hetzner erstellen
+→ öffentliche MediaMTX-IP feststellen
+→ MediaMTX prüfen
+→ MediaMTX-IP einmal lokal eintragen
+→ FFmpeg-VMs erstellen
+→ FFmpeg-Server zentral konfigurieren
+→ Paarungen einspielen
+→ Gesamtsystem prüfen
+```
+
+Die konkreten Schritte stehen in [`ffmpeg-table/README.md`](ffmpeg-table/README.md):
+
+- Installation auf einer neuen VM
+- Streamkey der FFmpeg-Variante in `/etc/ffmpeg-table.env`
+- Paarungen in `/root/overlay/schedule.json`
+- Korrektur der AV-Synchronität mit `VIDEO_DELAY`
+
+Die alternative Direktweiterleitung ohne Overlay und deren Streamkey-Datei
+`/usr/local/etc/youtube_keys.map` sind in
+[`mediamtx-direct-youtube/README.md`](mediamtx-direct-youtube/README.md) beschrieben.
+
+---
+
 ## Hetzner cloud-init
 
 Für neue FFmpeg-Server kann eine cloud-init-Datei verwendet werden, die:
 
 - das Repository nach `/opt/showdownBSCPraha2026` klont,
 - `run-ffmpeg-table.sh` nach `/usr/local/bin/` installiert,
-- `overlay_writer.py` nach `/usr/local/bin/` installiert,
-- `/etc/ffmpeg-table.env` host-spezifisch schreibt,
+- `overlay_writer.py` nach `/root/overlay/` installiert,
+- `/etc/ffmpeg-table.env` mit Platzhaltern schreibt,
 - `schedule.json` nach `/root/overlay/` kopiert,
-- die systemd-Services `ffmpeg-table.service` und `overlay-writer.service` aktiviert.
+- beide systemd-Services installiert und nur `overlay-writer.service` aktiviert.
 
-Pro Host müssen mindestens `TABLE` und `YOUTUBE_KEY` angepasst werden.
+Die produktiven Werte werden nicht in cloud-init eingetragen, sondern später
+zentral aus einer lokalen `deploy/event.env` verteilt. Der vollständige
+Installations- und Prüflauf steht in
+[`ffmpeg-table/README.md`](ffmpeg-table/README.md).
