@@ -8,7 +8,9 @@ package_upgrade: true
 
 packages:
   - ffmpeg
+  - fonts-dejavu-core
   - python3
+  - tzdata
   - git
   - curl
   - ca-certificates
@@ -25,23 +27,6 @@ write_files:
       REPO_URL="https://github.com/richtertoralf/showdownBSCPraha2026.git"
 
       # -----------------------------
-      # Konfiguration für DIESEN Host
-      # -----------------------------
-      TABLE="1"
-      RTSP_HOST="192.168.97.3"
-      RTSP_PORT="8554"
-      YOUTUBE_KEY="HIER_DEIN_YOUTUBE_STREAMKEY"
-
-      # Optional:
-      # Falls mehrere Server unterschiedliche Namen bekommen sollen,
-      # kann TABLE hier pro VM angepasst werden.
-      #
-      # Beispiel:
-      # ffmpeg-table1 -> TABLE=1
-      # ffmpeg-table2 -> TABLE=2
-      # ...
-
-      # -----------------------------
       # Repository holen / aktualisieren
       # -----------------------------
       if [ ! -d "$REPO_DIR/.git" ]; then
@@ -54,15 +39,15 @@ write_files:
       # -----------------------------
       # Verzeichnisse anlegen
       # -----------------------------
-      mkdir -p /root/overlay
-      mkdir -p /var/overlays
-      mkdir -p /usr/local/bin
+      install -d -m 0755 -o root -g root /root/overlay
+      install -d -m 0755 -o root -g root /var/overlays
+      install -d -m 0755 -o root -g root /usr/local/bin
 
       # -----------------------------
       # Skripte installieren
       # -----------------------------
       install -m 0755 "$REPO_DIR/ffmpeg-table/run-ffmpeg-table.sh" /usr/local/bin/run-ffmpeg-table.sh
-      install -m 0755 "$REPO_DIR/overlay/overlay_writer.py" /usr/local/bin/overlay_writer.py
+      install -m 0755 "$REPO_DIR/overlay/overlay_writer.py" /root/overlay/overlay_writer.py
 
       # -----------------------------
       # Beispiel-Spielplan installieren
@@ -72,14 +57,18 @@ write_files:
       install -m 0644 "$REPO_DIR/overlay/schedule.json" /root/overlay/schedule.json
 
       # -----------------------------
-      # FFmpeg-Umgebung schreiben
+      # FFmpeg-Beispielumgebung schreiben
+      # Produktive Werte verteilt später deploy/configure-ffmpeg-servers.sh.
       # -----------------------------
-      cat >/etc/ffmpeg-table.env <<EOF
-      RTSP_HOST=${RTSP_HOST}
-      RTSP_PORT=${RTSP_PORT}
-      TABLE=${TABLE}
-      YOUTUBE_KEY=${YOUTUBE_KEY}
+      cat >/etc/ffmpeg-table.env <<'EOF'
+      TABLE=1
+      MEDIAMTX_HOST=MEDIAMTX_PUBLIC_IP
+      RTSP_PORT=8554
+      YOUTUBE_URL=rtmp://a.rtmp.youtube.com/live2
+      YOUTUBE_KEY=YOUTUBE_STREAM_KEY
+      VIDEO_DELAY=0.0
       EOF
+      chown root:root /etc/ffmpeg-table.env
       chmod 600 /etc/ffmpeg-table.env
 
       # -----------------------------
@@ -93,11 +82,11 @@ write_files:
       # -----------------------------
       systemctl daemon-reload
       systemctl enable overlay-writer.service
-      systemctl enable ffmpeg-table.service
 
-      # Overlay zuerst, dann FFmpeg
+      # Overlay kann mit dem Beispiel-Spielplan starten. FFmpeg bleibt bis zur
+      # Verteilung der produktiven /etc/ffmpeg-table.env gestoppt.
       systemctl restart overlay-writer.service
-      systemctl restart ffmpeg-table.service
+      systemctl disable --now ffmpeg-table.service
 
       # -----------------------------
       # Kurze Statusausgabe ins Log

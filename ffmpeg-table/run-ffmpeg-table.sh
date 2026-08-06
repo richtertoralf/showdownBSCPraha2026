@@ -142,20 +142,23 @@
 # - das spart CPU und vermeidet zusätzliche Fehlerquellen
 # - Nachteil: Audio kann hier nicht per Filter verzögert oder bearbeitet werden
 
-VIDEO_DELAY="0.15"
-
 set -eu
 
 # Lädt die Umgebungsvariablen für diesen Tisch-Stream:
-# - RTSP_HOST
+# - MEDIAMTX_HOST
 # - RTSP_PORT
 # - TABLE
+# - YOUTUBE_URL
 # - YOUTUBE_KEY
+# - VIDEO_DELAY
 . /etc/ffmpeg-table.env
+
+# Ohne explizite Konfiguration wird das Video nicht zusätzlich verzögert.
+VIDEO_DELAY="${VIDEO_DELAY:-0.0}"
 
 exec /usr/bin/ffmpeg \
   -rtsp_transport tcp \
-  -i "rtsp://${RTSP_HOST}:${RTSP_PORT}/table${TABLE}" \
+  -i "rtsp://${MEDIAMTX_HOST}:${RTSP_PORT}/table${TABLE}" \
   -vf "setpts=PTS+${VIDEO_DELAY}/TB,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:textfile=/var/overlays/table${TABLE}.txt:reload=1:fontcolor=black@0:fontsize=34:line_spacing=5:box=1:boxcolor=lightblue@0.16:boxborderw=13:x=40:y=h-text_h-40,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:textfile=/var/overlays/table${TABLE}.txt:reload=1:fontcolor=white:fontsize=34:line_spacing=5:borderw=1:bordercolor=black@0.35:shadowx=1:shadowy=1:shadowcolor=black@0.22:box=1:boxcolor=black@0.32:boxborderw=10:x=40:y=h-text_h-40" \
   -c:v libx264 \
   -preset veryfast \
@@ -165,4 +168,4 @@ exec /usr/bin/ffmpeg \
   -sc_threshold 0 \
   -c:a copy \
   -f flv \
-  "rtmp://a.rtmp.youtube.com/live2/${YOUTUBE_KEY}"
+  "${YOUTUBE_URL}/${YOUTUBE_KEY}"

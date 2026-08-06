@@ -6,6 +6,7 @@
 set -eu
 
 KEYFILE="/usr/local/etc/youtube_keys.map"
+YOUTUBE_URL="rtmp://a.rtmp.youtube.com/live2"
 
 if [ ! -f "$KEYFILE" ]; then
   echo "Key file not found: $KEYFILE" >&2
@@ -39,4 +40,4 @@ exec ffmpeg \
   -i "rtsp://127.0.0.1:${RTSP_PORT}/${MTX_PATH}" \
   -c copy \
   -f flv \
-  "rtmp://a.rtmp.youtube.com/live2/${KEY}"
+  "${YOUTUBE_URL}/${KEY}"
